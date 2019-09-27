@@ -715,7 +715,7 @@ static CGFloat zh_randomValue(int i, int j) {
             
             if (!CGPointEqualToPoint(CGPointZero, _markerCenter)) {
                 _popupView.center = CGPointMake(_markerCenter.x, _markerCenter.y - changeHeight);
-            } else {
+            } else if ([self finishedCenter].y == _popupView.center.y) {
                 _popupView.center = CGPointMake(_popupView.center.x, _popupView.center.y - changeHeight);
             }
             
