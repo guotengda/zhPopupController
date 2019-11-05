@@ -629,14 +629,14 @@ static CGFloat zh_randomValue(int i, int j) {
 #pragma mark - FrontWindow
 
 - (UIWindow *)frontWindow {
-    NSEnumerator *enumerator = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
-    for (UIWindow *window in enumerator) {
-        BOOL windowOnMainScreen = (window.screen == [UIScreen mainScreen]);
-        BOOL windowIsVisible = !window.isHidden && window.alpha > 0;
-        if (windowOnMainScreen && windowIsVisible && window.isKeyWindow) {
-            return window;
-        }
-    }
+//    NSEnumerator *enumerator = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
+//    for (UIWindow *window in enumerator) {
+//        BOOL windowOnMainScreen = (window.screen == [UIScreen mainScreen]);
+//        BOOL windowIsVisible = !window.isHidden && window.alpha > 0;
+//        if (windowOnMainScreen && windowIsVisible && window.isKeyWindow) {
+//            return window;
+//        }
+//    }
     UIWindow *applicationWindow = [[UIApplication sharedApplication].delegate window];
     if (!applicationWindow) NSLog(@"** zhPopupController ** Window is nil!");
     return applicationWindow;
