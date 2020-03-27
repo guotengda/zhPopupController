@@ -77,6 +77,10 @@ typedef NS_ENUM(NSInteger, zhPopupSlideStyle) {
 /// You can adjust the spacing relative to the keyboard when the keyboard appears. default is 0
 @property (nonatomic, assign) CGFloat offsetSpacingOfKeyboard;
 
+/// keyboard notification enable, default is YES
+@property (nonatomic, assign) BOOL keyboardNotificationEnable;
+
+
 /// Use drop animation and set the rotation Angle. if set, Will not support drag.
 - (void)dropAnimatedWithRotateAngle:(CGFloat)angle;
 

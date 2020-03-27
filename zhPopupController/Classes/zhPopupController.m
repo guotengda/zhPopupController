@@ -45,7 +45,8 @@ static void *zhPopupControllerNSTimerKey = &zhPopupControllerNSTimerKey;
         self.slideStyle = zhPopupSlideStyleFade;
         self.dismissOppositeDirection = NO;
         self.allowPan = NO;
-    
+        self.keyboardNotificationEnable = YES;
+        
         // superview
         _superview = [self frontWindow];
         
@@ -136,6 +137,22 @@ static void *zhPopupControllerNSTimerKey = &zhPopupControllerNSTimerKey;
         _allowPan = allowPan;
         UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
         [_popupView addGestureRecognizer:pan];
+    }
+}
+
+- (void)setKeyboardNotificationEnable:(BOOL)keyboardNotificationEnable {
+    _keyboardNotificationEnable = keyboardNotificationEnable;
+    objc_setAssociatedObject(self, _cmd, @(keyboardNotificationEnable), OBJC_ASSOCIATION_RETAIN);
+    if (keyboardNotificationEnable) {
+        // Observer statusBar orientation changes.
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillChangeFrame:)
+                                                     name:UIKeyboardWillChangeFrameNotification
+                                                   object:nil];
+    } else {
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIKeyboardWillChangeFrameNotification
+                                                      object:nil];
     }
 }
 
@@ -658,11 +675,6 @@ static CGFloat zh_randomValue(int i, int j) {
                                              selector:@selector(didChangeStatusBarOrientation)
                                                  name:UIApplicationDidChangeStatusBarOrientationNotification
                                                object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillChangeFrame:)
-                                                 name:UIKeyboardWillChangeFrameNotification
-                                               object:nil];
 }
 
 - (void)unbindNotificationEvent {
@@ -675,10 +687,6 @@ static CGFloat zh_randomValue(int i, int j) {
     [[NSNotificationCenter defaultCenter]removeObserver:self
                                                    name:UIApplicationDidChangeStatusBarOrientationNotification
                                                  object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillChangeFrameNotification
-                                                  object:nil];
 }
 
 #pragma mark - Observing
@@ -940,6 +948,7 @@ static CGFloat zh_randomValue(int i, int j) {
 
 - (void)dealloc {
     [self unbindNotificationEvent];
+    self.keyboardNotificationEnable = NO;
     [self removeSubviews];
 }
 
