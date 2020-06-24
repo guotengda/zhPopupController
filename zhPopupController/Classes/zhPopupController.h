@@ -61,6 +61,8 @@ typedef NS_ENUM(NSUInteger, zhPopupWindowLevel) {
 /// Bind the view to a popup controller，one-to-one
 - (instancetype)initWithView:(UIView *)popupView size:(CGSize)size;
 
+@property (nonatomic, weak, readonly) UIView *proxyView;
+
 /// The view is the initialized `popupView`
 @property (nonatomic, strong, readonly) UIView *view;
 
@@ -133,10 +135,24 @@ typedef NS_ENUM(NSUInteger, zhPopupWindowLevel) {
 /// Block gets called when contentView did dismiss.
 @property (nonatomic, copy) void (^didDismissBlock)(zhPopupController *popupController);
 
+/// 内部方法, 为了子类重写使用, 请不要调用;
+/// @param duration
+/// @param delay
+/// @param options
+/// @param isBounced
+/// @param completion
+- (void)presentDuration:(NSTimeInterval)duration
+                  delay:(NSTimeInterval)delay
+                options:(UIViewAnimationOptions)options
+                bounced:(BOOL)isBounced
+             completion:(void (^)(void))completion;
+
 @end
 
 
 @interface zhPopupController (Convenient)
+
+- (UIWindow *)keyWindow;
 
 /// shows popup view animated in window
 - (void)show;
