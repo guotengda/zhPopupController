@@ -65,13 +65,13 @@
                 bounced:(BOOL)isBounced
              completion:(void (^)(void))completion {
     if (self.isPresenting) return;
-    
+    self->_isPresenting = YES;
     self.maskView.alpha = 0;
     [self prepareSlideStyle];
     self.view.center = [self prepareCenter];
     
     __block void (^finishedCallback)(void) = ^() {
-        self->_isPresenting = YES;
+//        self->_isPresenting = YES;
         if (self.didPresentBlock) {
             self.didPresentBlock(self);
         } else {
@@ -507,6 +507,7 @@
 }
 
 - (void)dealloc {
+    [self removeSubviews];
     [self unbindKeyboardNotifications];
 }
 
@@ -561,6 +562,17 @@ static void *UIViewzhPopupControllersKey = &UIViewzhPopupControllersKey;
         [_popupControllers addObject:popupController];
     }
     [popupController presentDuration:duration delay:delay options:options bounced:isBounced completion:completion];
+}
+
+- (void)zh_dismissAllPopupControllers {
+    NSMutableArray<zhPopupController *> *_popupControllers = objc_getAssociatedObject(self, UIViewzhPopupControllersKey);
+    for (zhPopupController *popup in _popupControllers) {
+        [popup dismissDuration:0 delay:0 options:UIViewAnimationOptionCurveEaseOut completion:nil];
+        [_popupControllers removeObject:popup];
+    }
+    if (_popupControllers.count < 1) {
+        objc_setAssociatedObject(self, UIViewzhPopupControllersKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
 }
 
 - (void)zh_dissmissPopupController:(zhPopupController *)popupController completion:(void (^)(void))completion {
@@ -622,7 +634,7 @@ static void *UIViewzhPopupControllersKey = &UIViewzhPopupControllersKey;
 }
 
 - (void)dismissWithDuration:(NSTimeInterval)duration completion:(void (^)(void))completion {
-    return [self.proxyView zh_dissmissPopupController:self completion:completion];
+    return [self.proxyView zh_dissmissPopupController:self duration:duration delay:0 options:UIViewAnimationOptionCurveEaseOut completion:completion];
 }
 
 - (void)dismissWithDuration:(NSTimeInterval)duration delay:(NSTimeInterval)delay options:(UIViewAnimationOptions)options completion:(void (^)(void))completion {
