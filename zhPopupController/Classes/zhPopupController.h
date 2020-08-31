@@ -106,7 +106,7 @@ typedef NS_ENUM(NSUInteger, zhPopupWindowLevel) {
 @property (nonatomic, assign) CGFloat panDismissRatio;
 
 /// Adjust the layout position by `offsetSpacing`
-@property (nonatomic, assign) CGFloat offsetSpacing;
+@property (nonatomic, assign) CGPoint offset;
 
 /// Adjust the spacing between with the keyboard
 @property (nonatomic, assign) CGFloat keyboardOffsetSpacing;
