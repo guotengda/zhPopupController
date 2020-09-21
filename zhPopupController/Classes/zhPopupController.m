@@ -267,9 +267,9 @@
                                self.maskView.center.y + self.offset.y);
         case zhPopupLayoutTypeBottom:
             return CGPointMake(self.maskView.center.x + self.offset.x,
-                               self.maskView.bounds.size.height - self.view.bounds.size.height / 2 - self.offset.y);
+                               self.maskView.bounds.size.height - self.view.bounds.size.height / 2 + self.offset.y);
         case zhPopupLayoutTypeRight:
-            return CGPointMake(self.maskView.bounds.size.width - self.view.bounds.size.width / 2 - self.offset.x,
+            return CGPointMake(self.maskView.bounds.size.width - self.view.bounds.size.width / 2 + self.offset.x,
                                self.maskView.center.y + self.offset.y);
         case zhPopupLayoutTypeCenter:
             /// only adjust center.y
@@ -345,10 +345,9 @@
         case UIGestureRecognizerStateBegan:
             break;
         case UIGestureRecognizerStateChanged: {
-            CGPoint boundary = CGPointMake(g.view.bounds.size.width + self.offset.x, g.view.bounds.size.height + self.offset.y);
             switch (self.layoutType) {
                 case zhPopupLayoutTypeTop: {
-//                    CGFloat boundary = g.view.bounds.size.height + self.offset.y;
+                    CGPoint boundary = CGPointMake(g.view.bounds.size.width + self.offset.x, g.view.bounds.size.height + self.offset.y);
                     if ((CGRectGetMinY(g.view.frame) + g.view.bounds.size.height + p.y) < boundary.y) {
                         g.view.center = CGPointMake(g.view.center.x, g.view.center.y + p.y);
                     } else {
@@ -357,7 +356,7 @@
                     self.maskView.alpha = CGRectGetMaxY(g.view.frame) / boundary.y;
                 } break;
                 case zhPopupLayoutTypeLeft: {
-//                    CGFloat boundary = g.view.bounds.size.width + self.offset.x;
+                    CGPoint boundary = CGPointMake(g.view.bounds.size.width + self.offset.x, g.view.bounds.size.height + self.offset.y);
                     if ((CGRectGetMinX(g.view.frame) + g.view.bounds.size.width + p.x) < boundary.x) {
                         g.view.center = CGPointMake(g.view.center.x + p.x, g.view.center.y);
                     } else {
@@ -366,7 +365,7 @@
                     self.maskView.alpha = CGRectGetMaxX(g.view.frame) / boundary.x;
                 } break;
                 case zhPopupLayoutTypeBottom: {
-//                    CGFloat boundary = self.maskView.bounds.size.height - g.view.bounds.size.height - self.offsetSpacing;
+                    CGPoint boundary = CGPointMake(g.view.bounds.size.width + self.offset.x, self.maskView.bounds.size.height - g.view.bounds.size.height + self.offset.y);
                     if ((g.view.frame.origin.y + p.y) > boundary.y) {
                         g.view.center = CGPointMake(g.view.center.x, g.view.center.y + p.y);
                     } else {
@@ -375,7 +374,7 @@
                     self.maskView.alpha = 1 - (CGRectGetMinY(g.view.frame) - boundary.y) / (self.maskView.bounds.size.height - boundary.y);
                 } break;
                 case zhPopupLayoutTypeRight: {
-//                    CGFloat boundary = self.maskView.bounds.size.width - g.view.bounds.size.width - self.offsetSpacing;
+                    CGPoint boundary = CGPointMake(self.maskView.bounds.size.width - g.view.bounds.size.width + self.offset.x, g.view.bounds.size.height + self.offset.y);
                     if ((CGRectGetMinX(g.view.frame) + p.x) > boundary.x) {
                         g.view.center = CGPointMake(g.view.center.x + p.x, g.view.center.y);
                     } else {
@@ -387,8 +386,8 @@
                     [self directionalLock:p];
                     if (_directionalVertical) {
                         g.view.center = CGPointMake(g.view.center.x, g.view.center.y + p.y);
-//                        CGFloat boundary = self.maskView.bounds.size.height / 2 + self.offsetSpacing - g.view.bounds.size.height / 2;
-                        self.maskView.alpha = 1 - (CGRectGetMinY(g.view.frame) - boundary.y) / (self.maskView.bounds.size.height - boundary.y);
+                        CGFloat offsetY = self.maskView.bounds.size.height / 2 + self.offset.y - g.view.bounds.size.height / 2;
+                        self.maskView.alpha = 1 - (CGRectGetMinY(g.view.frame) + offsetY) / (self.maskView.bounds.size.height + offsetY);
                     } else {
                         [self directionalUnlock]; // todo...
                     }
